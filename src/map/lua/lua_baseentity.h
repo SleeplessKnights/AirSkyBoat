@@ -553,6 +553,8 @@ public:
     bool  isInDynamis();                                                                                                           // If player is in Dynamis return true else false
     void  setEnteredBattlefield(bool entered);                                                                                     // Sets if the player has entered into a battlefield or not
     bool  hasEnteredBattlefield();                                                                                                 // If the player has entered into a battlefield return true else false
+    void  sendTimerPacket(uint32 seconds);
+    void  sendClearTimerPacket();
 
     // Battle Utilities
     bool isAlive();
@@ -560,6 +562,7 @@ public:
     void sendRaise(uint8 raiseLevel);
     void sendReraise(uint8 raiseLevel);
     void sendTractor(float xPos, float yPos, float zPos, uint8 rotation);
+    void allowSendRaisePrompt();
 
     void countdown(sol::object const& secondsObj,
                    sol::object const& bar1NameObj, sol::object const& bar1ValObj,
@@ -858,7 +861,7 @@ public:
 
     bool actionQueueEmpty(); // returns whether the action queue is empty or not
 
-    void  castSpell(sol::object const& spell, sol::object entity);                                                                                                                                           // forces a mob to cast a spell (parameter = spell ID, otherwise picks a spell from its list)
+    void  castSpell(sol::object const& spell, sol::object const& entity);                                                                                                                                    // forces a mob to cast a spell (parameter = spell ID, otherwise picks a spell from its list)
     void  useJobAbility(uint16 skillID, sol::object const& pet);                                                                                                                                             // forces a job ability use (players/pets only)
     void  useMobAbility(sol::variadic_args va);                                                                                                                                                              // forces a mob to use a mobability (parameter = skill ID)
     int32 triggerDrawIn(CLuaBaseEntity* PMobEntity, sol::object const& includePt, sol::object const& drawRange, sol::object const& maxReach, sol::object const& target, sol::object const& incDeadAndMount); // forces a mob to draw in target

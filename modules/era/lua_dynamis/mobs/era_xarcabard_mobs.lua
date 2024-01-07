@@ -5,7 +5,6 @@ require("scripts/globals/zone")
 require("scripts/globals/utils")
 require("scripts/globals/dynamis")
 -----------------------------------
-
 xi = xi or {}
 xi.dynamis = xi.dynamis or {}
 
@@ -139,6 +138,7 @@ xi.dynamis.onSpawnYing = function(mob)
     local mainLord = zone:getLocalVar("179")
     mob:setRoamFlags(xi.roamFlag.SCRIPTED)
     mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.GRAVITY)
     xi.dynamis.setNMStats(mob)
     if mainLord ~= 0 then
         local dynaLord = GetMobByID(mainLord)
@@ -157,6 +157,7 @@ xi.dynamis.onSpawnYang = function(mob)
     local mainLord = zone:getLocalVar("179")
     mob:setRoamFlags(xi.roamFlag.SCRIPTED)
     mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.GRAVITY)
     xi.dynamis.setNMStats(mob)
     if mainLord ~= 0 then
         local dynaLord = GetMobByID(mainLord)

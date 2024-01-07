@@ -441,6 +441,11 @@ UPDATE mob_groups SET HP = 12000 WHERE name = "Nightmare_Worm" and zoneid = 42;
 UPDATE mob_groups SET HP = 14000 WHERE name = "Nightmare_Antlion" and zoneid = 42;
 UPDATE mob_groups SET HP = 6000 WHERE name = "Nightmare_Leech" and zoneid = 42;
 UPDATE mob_groups SET HP = 6000 WHERE name = "Nightmare_Cluster" and zoneid = 42;
+UPDATE mob_groups SET HP = 30000 WHERE name = "Diabolos_Spade" and zoneid = 42;
+UPDATE mob_groups SET HP = 30000 WHERE name = "Diabolos_Heart" and zoneid = 42;
+UPDATE mob_groups SET HP = 30000 WHERE name = "Diabolos_Diamond" and zoneid = 42;
+UPDATE mob_groups SET HP = 30000 WHERE name = "Diabolos_Club" and zoneid = 42;
+UPDATE mob_groups SET HP = 15000 WHERE name = "Diaboloss_Shard" and zoneid = 42;
 
 -- ------------------------------------------------------------
 -- Bhaflau_Thickets (Zone 52)
@@ -455,8 +460,10 @@ UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Wivre' AND groupid='53
 -- ------------------------------------------------------------
 
 UPDATE mob_groups SET content_tag='ROV' WHERE name='Nirgali' AND groupid='40' AND zoneid='54';
+UPDATE mob_groups SET HP='12500', maxLevel='83' WHERE name='Bloody_Bones' AND groupid='48' AND zoneid='54';
 UPDATE mob_groups SET content_tag='ROV' WHERE name='Nostokulshedra' AND groupid='52' AND zoneid='54';
 UPDATE mob_groups SET content_tag='ROV' WHERE name='Dweomershell' AND groupid='65' AND zoneid='54';
+UPDATE mob_groups SET HP='4000' WHERE name='Lamia_Exon' AND groupid='84' AND zoneid='54';
 
 -- ------------------------------------------------------------
 -- Mount_Zhayolm (Zone 61)
@@ -465,6 +472,38 @@ UPDATE mob_groups SET content_tag='ROV' WHERE name='Dweomershell' AND groupid='6
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Sulphuric_Jagil' AND groupid='9' AND zoneid='61';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Orichalcumshell' AND groupid='33' AND zoneid='61';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Scoriaceous_Eruca' AND groupid='35' AND zoneid='61';
+UPDATE mob_groups SET HP='10500', minlevel='79' WHERE name='Energetic_Eruca' AND groupid='41' AND zoneid='61';
+UPDATE mob_groups SET respawntime='0' WHERE name='Garharlor_the_Unruly' AND groupid='42' AND zoneid='61';
+UPDATE mob_groups SET respawntime='0' WHERE name='Garfurlar_the_Rabid' AND groupid='43' AND zoneid='61';
+UPDATE mob_groups SET respawntime='0' WHERE name='Garhorlur_the_Brutal' AND groupid='44' AND zoneid='61';
+
+-- ------------------------------------------------------------
+-- Halvung (Zone 62)
+-- ------------------------------------------------------------
+
+UPDATE mob_groups SET HP='4000' WHERE name='Hilltroll_Elite_Guard' AND groupid='47' AND zoneid='62';
+UPDATE mob_groups SET HP='4000' WHERE name='Woodtroll_Elite_Guard' AND groupid='48' AND zoneid='62';
+
+-- ------------------------------------------------------------
+-- Mamook (Zone 65)
+-- ------------------------------------------------------------
+
+UPDATE mob_groups SET HP='4000' WHERE name='Mamool_Ja_Chamberlain' AND groupid='55' AND zoneid='65';
+UPDATE mob_groups SET HP='4000' WHERE name='Mamool_Ja_Palatine' AND groupid='56' AND zoneid='65';
+UPDATE mob_groups SET HP='14000' WHERE name='Zizzy_Zillah' AND groupid='20' AND zoneid='65';
+
+-- ------------------------------------------------------------
+-- Halvung (Zone 62)
+-- ------------------------------------------------------------
+
+UPDATE mob_groups SET HP='12500' WHERE name='Big_Bomb' AND groupid='29' AND zoneid='62';
+
+-- ------------------------------------------------------------
+-- Mamool_Ja_Training_Grounds (Zone 66)
+-- ------------------------------------------------------------
+
+UPDATE mob_groups SET HP='3000', minLevel='70', maxLevel='70' WHERE name='Mamool_Ja_Recruit' AND groupid='14' AND zoneid='66';
+UPDATE mob_groups SET HP='3500', minLevel='77', maxLevel='78' WHERE name='Mamool_Ja_Trainer' AND groupid='15' AND zoneid='66';
 
 -- ------------------------------------------------------------
 -- Aydeewa_Subterrane (Zone 68)
@@ -488,6 +527,11 @@ UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Deforester' AND groupid=
 
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Slough_Skua' AND groupid='28' AND zoneid='79';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Vauxia_Fly' AND groupid='45' AND zoneid='79';
+
+-- ASB Section (Offset by 100 to avoid merge conflicts)
+INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES
+(100,714,79,'Peallaidh_Chigoe',0,0,466,350,0,70,71,0),
+(101,714,79,'Karakul_Chigoe',0,0,466,50,0,62,66,0);
 
 -- ------------------------------------------------------------
 -- Jugner_Forest_[S] (Zone 82)
@@ -518,7 +562,6 @@ UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Drachenlizard' AND group
 -- ------------------------------------------------------------
 
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Feyweald_Sapling' AND groupid='16' AND zoneid='89';
-
 
 -- ------------------------------------------------------------
 -- Rolanberry_Fields_[S] (Zone 91)
@@ -1045,7 +1088,6 @@ UPDATE mob_groups SET content_tag='WOTG' WHERE name='Marquis_Sabnock' AND groupi
 UPDATE mob_groups SET minLevel = 48, maxLevel = 50 WHERE name = "Demons_Elemental"  and zoneid = 161 and groupid = 18;
 UPDATE mob_groups SET minLevel = 59, maxLevel = 61 WHERE name = "Demons_Elemental"  and zoneid = 161 and groupid = 54;
 
-
 -- ------------------------------------------------------------
 -- Castle_Zvahl_Keep (Zone 162)
 -- ------------------------------------------------------------
@@ -1140,7 +1182,6 @@ UPDATE mob_groups SET minLevel = 65, maxLevel = 67 WHERE name = "Mousse_fished" 
 -- UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Lugcrawler' AND groupid='??' AND zoneid='171';
 -- UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Worker_Lugcrawler' AND groupid='??' AND zoneid='171';
 -- UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Soldier_Lugcrawler' AND groupid='??' AND zoneid='171';
-
 
 -- ------------------------------------------------------------
 -- Zeruhn_Mines (Zone 172)

@@ -363,8 +363,19 @@ void CLuaBaseEntity::PrintToArea(std::string const& message, sol::object const& 
     }
     else if (messageRange == MESSAGE_AREA_PARTY)
     {
-        message::send(MSG_CHAT_PARTY, nullptr, 0, new CChatMessagePacket(PChar, messageLook, message, name));
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, messageLook, message, name));
+        int8 packetData[8]{};
+        if (PChar->PParty->m_PAlliance)
+        {
+            ref<uint32>(packetData, 0) = PChar->PParty->m_PAlliance->m_AllianceID;
+            ref<uint32>(packetData, 4) = 0; // No ID so that the PChar sees the message too
+            message::send(MSG_CHAT_ALLIANCE, packetData, sizeof packetData, new CChatMessagePacket(PChar, messageLook, message, name));
+        }
+        else if (PChar->PParty)
+        {
+            ref<uint32>(packetData, 0) = PChar->PParty->GetPartyID();
+            ref<uint32>(packetData, 4) = 0; // No ID so that the PChar sees the message too
+            message::send(MSG_CHAT_PARTY, packetData, sizeof packetData, new CChatMessagePacket(PChar, messageLook, message, name));
+        }
     }
     else if (messageRange == MESSAGE_AREA_YELL)
     {
@@ -4441,8 +4452,7 @@ void CLuaBaseEntity::equipItem(uint16 itemID, sol::object const& container)
         PItem = static_cast<CItemEquipment*>(PChar->getStorage(containerID)->GetItem(SLOT));
 
         charutils::EquipItem(PChar, SLOT, PItem->getSlotType(), containerID);
-        charutils::SaveCharEquip(PChar);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     }
 }
 
@@ -10235,6 +10245,39 @@ bool CLuaBaseEntity::hasEnteredBattlefield()
 }
 
 /************************************************************************
+ *  Function: sendTimerPacket()
+ *  Purpose : sends the packet to enable a timer with durations in seconds
+ *  Example : player:sendTimerPacket(60 * 15)
+ *  Notes   :
+ ************************************************************************/
+
+void CLuaBaseEntity::sendTimerPacket(uint32 seconds)
+{
+    if (m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("CLuaBaseEntity::sendTimerPacket() was called on non CCharEntity!");
+        return;
+    }
+    charutils::SendTimerPacket(static_cast<CCharEntity*>(m_PBaseEntity), seconds);
+}
+
+/************************************************************************
+ *  Function: sendClearTimerPacket()
+ *  Purpose : sends the packet to clear an existing timer
+ *  Example : player:sendClearTimerPacket()
+ *  Notes   :
+ ************************************************************************/
+void CLuaBaseEntity::sendClearTimerPacket()
+{
+    if (m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("CLuaBaseEntity::sendClearTimerPacket() was called on non CCharEntity!");
+        return;
+    }
+    charutils::SendClearTimerPacket(static_cast<CCharEntity*>(m_PBaseEntity));
+}
+
+/************************************************************************
  *  Function: isAlive()
  *  Purpose : Returns true if an Entity is alive
  *  Example : if mob:isAlive() then
@@ -10332,6 +10375,28 @@ void CLuaBaseEntity::sendTractor(float xPos, float yPos, float zPos, uint8 rotat
         PChar->m_StartActionPos.rotation = rotation;
 
         PChar->pushPacket(new CRaiseTractorMenuPacket(PChar, TYPE_TRACTOR));
+    }
+}
+
+/************************************************************************
+ *  Function: allowSendRaisePrompt()
+ *  Purpose : Allows the raise prompt to be sent again to client
+ *            if for example player was moved while dead (thus removing the prompt)
+ *  Example : player:allowSendRaisePrompt()
+ ************************************************************************/
+
+void CLuaBaseEntity::allowSendRaisePrompt()
+{
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowError("m_PBaseEntity is null or not a Player.");
+        return;
+    }
+
+    if (m_PBaseEntity->PAI->IsCurrentState<CDeathState>())
+    {
+        auto deathState = static_cast<CDeathState*>(m_PBaseEntity->PAI->GetCurrentState());
+        deathState->allowSendRaise();
     }
 }
 
@@ -13733,7 +13798,7 @@ void CLuaBaseEntity::petAttack(CLuaBaseEntity* PEntity)
     XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
     CBattleEntity* PBattle = static_cast<CBattleEntity*>(m_PBaseEntity)->PPet;
-    if (PBattle != nullptr)
+    if (PBattle != nullptr && PEntity != nullptr)
     {
         if (PBattle->objtype == TYPE_PET)
         {
@@ -15206,7 +15271,7 @@ bool CLuaBaseEntity::actionQueueEmpty()
  *  Notes   : Currently only used by a few select mobs
  ************************************************************************/
 
-void CLuaBaseEntity::castSpell(sol::object const& spell, sol::object entity)
+void CLuaBaseEntity::castSpell(sol::object const& spell, sol::object const& entity)
 {
     if (spell != sol::lua_nil)
     {
@@ -17173,6 +17238,8 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("isInDynamis", CLuaBaseEntity::isInDynamis);
     SOL_REGISTER("setEnteredBattlefield", CLuaBaseEntity::setEnteredBattlefield);
     SOL_REGISTER("hasEnteredBattlefield", CLuaBaseEntity::hasEnteredBattlefield);
+    SOL_REGISTER("sendTimerPacket", CLuaBaseEntity::sendTimerPacket);
+    SOL_REGISTER("sendClearTimerPacket", CLuaBaseEntity::sendClearTimerPacket);
 
     // Battle Utilities
     SOL_REGISTER("isAlive", CLuaBaseEntity::isAlive);
@@ -17181,6 +17248,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("sendRaise", CLuaBaseEntity::sendRaise);
     SOL_REGISTER("sendReraise", CLuaBaseEntity::sendReraise);
     SOL_REGISTER("sendTractor", CLuaBaseEntity::sendTractor);
+    SOL_REGISTER("allowSendRaisePrompt", CLuaBaseEntity::allowSendRaisePrompt);
 
     SOL_REGISTER("countdown", CLuaBaseEntity::countdown);
     SOL_REGISTER("enableEntities", CLuaBaseEntity::enableEntities);

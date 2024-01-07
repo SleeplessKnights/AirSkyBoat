@@ -787,6 +787,11 @@ namespace battleutils
         ELEMENT spikeElement = (ELEMENT)((uint8)GetSpikesDamageType(Action->spikesEffect) - (uint8)DAMAGE_TYPE::ELEMENTAL);
         int32   damage       = Action->spikesParam;
 
+        if (PDefender->getMod(Mod::SPIKES_DMG_BONUS) > 0)
+        {
+            damage *= 1 + (PDefender->getMod(Mod::SPIKES_DMG_BONUS) / 100.f);
+        }
+
         if (static_cast<SPIKES>(Action->spikesEffect) == SPIKES::SPIKE_DREAD)
         {
             // drain same as damage taken
@@ -1804,21 +1809,6 @@ namespace battleutils
 
         if (chance < check)
         {
-            // Prevent interrupt if Aquaveil is active, if it were to interrupt.
-            if (PDefender->StatusEffectContainer->HasStatusEffect(EFFECT_AQUAVEIL))
-            {
-                auto aquaCount = PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_AQUAVEIL)->GetPower();
-                if (aquaCount - 1 == 0) // removes the status, but still prevents the interrupt
-                {
-                    PDefender->StatusEffectContainer->DelStatusEffect(EFFECT_AQUAVEIL);
-                }
-                else
-                {
-                    PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_AQUAVEIL)->SetPower(aquaCount - 1);
-                }
-                return false;
-            }
-            // Otherwise interrupt the spell cast.
             return true;
         }
 
@@ -1981,14 +1971,14 @@ namespace battleutils
     {
         CItemWeapon* PWeapon = GetEntityWeapon(PDefender, SLOT_MAIN);
         if (((PDefender->objtype == TYPE_PC && PWeapon != nullptr && PWeapon->getID() != 0 && PWeapon->getID() != 65535 && PWeapon->getSkillType() != SKILL_HAND_TO_HAND) ||
-             (PDefender->objtype == TYPE_MOB && PDefender->m_EcoSystem == ECOSYSTEM::BEASTMAN && PDefender->GetMJob() != JOB_MNK && PDefender->isInDynamis())) &&
+             (PDefender->objtype == TYPE_MOB && PDefender->m_EcoSystem == ECOSYSTEM::BEASTMAN && JOBS_WITH_PARRY_SKILL.count(PDefender->GetMJob()) > 0 && PDefender->isInDynamis())) &&
             PDefender->PAI->IsEngaged())
         {
             float        defender_parry_skill = (float)(PDefender->GetSkill(SKILL_PARRY) + PDefender->getMod(Mod::PARRY) + PWeapon->getILvlParry());
             CItemWeapon* weapon               = GetEntityWeapon(PAttacker, SLOT_MAIN);
             uint16       attackSkill          = PAttacker->GetSkill((SKILLTYPE)(weapon ? weapon->getSkillType() : 0));
 
-            int parryRate = std::clamp<int>((int)(20.0f + (defender_parry_skill - attackSkill) / 8.0f), 5, 30);
+            int parryRate = std::clamp<int>((int)(17.0f + (defender_parry_skill - attackSkill) / 8.0f), 5, 30);
 
             // Issekigan grants parry rate bonus. From best available data, if you already capped out at 25% parry it grants another 25% bonus for ~50%
             // parry rate
@@ -2133,11 +2123,12 @@ namespace battleutils
             if (isBlocked)
             {
                 uint8 absorb = 100;
-                if (PDefender->m_Weapons[SLOT_SUB]->IsShield())
+                if (const auto PChar = dynamic_cast<CCharEntity*>(PDefender))
                 {
-                    if (PDefender->objtype == TYPE_PC)
+                    CItemEquipment* slotSub = PChar->getEquip(SLOT_SUB);
+                    if (slotSub && slotSub->IsShield())
                     {
-                        absorb = std::clamp(100 - PDefender->m_Weapons[SLOT_SUB]->getShieldAbsorption(), 0, 100);
+                        absorb = std::clamp(100 - slotSub->getShieldAbsorption(), 0, 100);
                         absorb -= PDefender->getMod(Mod::SHIELD_DEF_BONUS); // Include Shield Defense Bonus in absorb amount
 
                         // Shield Mastery
@@ -2786,10 +2777,12 @@ namespace battleutils
                 critHitRate += PCharAttacker->PMeritPoints->GetMeritValue(MERIT_CRIT_HIT_RATE, PCharAttacker);
 
                 // Add Fencer crit hit rate
-                CItemWeapon* PMain = dynamic_cast<CItemWeapon*>(PCharAttacker->m_Weapons[SLOT_MAIN]);
-                CItemWeapon* PSub  = dynamic_cast<CItemWeapon*>(PCharAttacker->m_Weapons[SLOT_SUB]);
+                CItemWeapon*    PMain      = dynamic_cast<CItemWeapon*>(PCharAttacker->m_Weapons[SLOT_MAIN]);
+                CItemEquipment* PSub       = PCharAttacker->getEquip(SLOT_SUB);
+                CItemWeapon*    PSubWeapon = dynamic_cast<CItemWeapon*>(PCharAttacker->m_Weapons[SLOT_SUB]);
+
                 if (PMain && !PMain->isTwoHanded() && !PMain->isHandToHand() &&
-                    (!PSub || PSub->getSkillType() == SKILL_NONE || PCharAttacker->m_Weapons[SLOT_SUB]->IsShield()))
+                    (!PSub || (PSubWeapon && PSubWeapon->getSkillType() == SKILL_NONE) || PSub->IsShield()))
                 {
                     critHitRate += PCharAttacker->getMod(Mod::FENCER_CRITHITRATE);
                 }
@@ -5318,10 +5311,6 @@ namespace battleutils
             {
                 PEntity->PAI->Disengage();
             }
-            if (PEntity->isDead())
-            {
-                PEntity->Die();
-            }
             PEntity->updatemask |= UPDATE_ALL_CHAR;
         }
     }
@@ -6260,7 +6249,7 @@ namespace battleutils
         // Snap nearEntity to a guaranteed valid position
         if (PMob->loc.zone->m_navMesh)
         {
-            PMob->loc.zone->m_navMesh->snapToValidPosition(nearEntity);
+            PMob->loc.zone->m_navMesh->snapToValidPosition(nearEntity, pos.y, true);
         }
 
         // Move the target a little higher, just in case
@@ -6716,6 +6705,10 @@ namespace battleutils
                 }
             }
         }
+        else if (PSpell->getSpellGroup() == SPELLGROUP_SUMMONING)
+        {
+            cast -= 1000 * PEntity->getMod(Mod::SUMMONING_MAGIC_CAST);
+        }
         else if (PSpell->getSpellGroup() == SPELLGROUP_SONG)
         {
             if (PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_PIANISSIMO))
@@ -7053,10 +7046,12 @@ namespace battleutils
                 }
 
                 // Add Fencer TP Bonus
-                CItemWeapon* PMain = dynamic_cast<CItemWeapon*>(PEntity->m_Weapons[SLOT_MAIN]);
-                CItemWeapon* PSub  = dynamic_cast<CItemWeapon*>(PEntity->m_Weapons[SLOT_SUB]);
+                CItemWeapon*    PMain      = dynamic_cast<CItemWeapon*>(PChar->m_Weapons[SLOT_MAIN]);
+                CItemEquipment* PSub       = PChar->getEquip(SLOT_SUB);
+                CItemWeapon*    PSubWeapon = dynamic_cast<CItemWeapon*>(PChar->m_Weapons[SLOT_SUB]);
+
                 if (PMain && !PMain->isTwoHanded() && !PMain->isHandToHand() &&
-                    (!PSub || PSub->getSkillType() == SKILL_NONE || PEntity->m_Weapons[SLOT_SUB]->IsShield()))
+                    (!PSub || (PSubWeapon && PSubWeapon->getSkillType() == SKILL_NONE) || PSub->IsShield()))
                 {
                     tp += PEntity->getMod(Mod::FENCER_TP_BONUS);
                 }
@@ -7077,7 +7072,7 @@ namespace battleutils
                 uint8 slot = PChar->equip[SLOT_AMMO];
                 uint8 loc  = PChar->equipLoc[SLOT_AMMO];
                 charutils::UnequipItem(PChar, SLOT_AMMO);
-                charutils::SaveCharEquip(PChar);
+                PChar->RequestPersist(CHAR_PERSIST::EQUIP);
                 charutils::UpdateItem(PChar, loc, slot, -quantity);
                 PChar->pushPacket(new CInventoryFinishPacket());
                 return true;

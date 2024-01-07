@@ -92,7 +92,7 @@ xi.dynamis.spawnWave = function(zone, zoneID, waveNumber)
         end
     end
 
-    if waveNumber == 5 and zoneID == xi.zone.DYNAMIS_XARCABARD then
+    if waveNumber == 4 and zoneID == xi.zone.DYNAMIS_XARCABARD then
         local playersInZone = zone:getPlayers()
         for _, player in pairs(playersInZone) do
             player:messageSpecial(zones[xi.zone.DYNAMIS_XARCABARD].text.PRISON_OF_SOULS_HAS_SET_FREE)
@@ -116,10 +116,7 @@ xi.dynamis.parentOnEngaged = function(mob, target)
 
         if xi.dynamis.mobList[zoneID][oMobIndex].nmchildren ~= nil then
             for index, MobIndex in pairs(xi.dynamis.mobList[zoneID][oMobIndex].nmchildren) do
-                if
-                    MobIndex or
-                    not MobIndex
-                then
+                if type(MobIndex) == "boolean" then
                     index = index + 1
                 else
                     local forceLink = xi.dynamis.mobList[zoneID][oMobIndex].nmchildren[1]
@@ -424,6 +421,15 @@ xi.dynamis.normalDynamicSpawn = function(oMob, oMobIndex, target)
                 groupZoneId = nameObj[job][3],
                 onMobSpawn = function(mobArg)
                     xi.dynamis.setMobStats(mobArg)
+
+                    -- Hydra mobs in Dynamis Beaucedine are immune to sleep
+                    if
+                        mobArg:getFamily() == 359 and
+                        mobArg:getZoneID() == xi.zone.DYNAMIS_BEAUCEDINE
+                    then
+                        mobArg:addImmunity(xi.immunity.SLEEP)
+                    end
+
                     -- set all dyna mobs to same sublink so for example statues link when seeing normal mobs
                     mobArg:setMobMod(xi.mobMod.SUBLINK, xi.dynamis.SUBLINK_ID)
                 end,
@@ -798,11 +804,6 @@ xi.dynamis.nonStandardDynamicSpawn = function(mobIndex, oMob, forceLink, zoneID,
             mob:updateEnmity(target)
         end
     end
-
-    if mob:getFamily() == 68 then
-        -- temp fix to ensure clusters have the right animation sub
-        mob:setAnimationSub(4)
-    end
 end
 
 xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, target, oMob, mainDynaLord)
@@ -818,11 +819,16 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
 
     local mobName = xi.dynamis.mobList[zoneID][mobIndex].info[2]
 
-    -- special spawning of DL clones near victems
     if
-        mobIndex == 179 and
+        -- Special spawning of Diabolos Shard, Nightmare Worm, and Nightmare Antlion
+        ((zoneID == xi.zone.DYNAMIS_TAVNAZIA and
+        (mobIndex == 252 or
+        mobIndex == 2 or
+        mobIndex == 3)) or
+        -- Special spawning of DL clones near victems
+        (mobIndex == 179 and
         oMobIndex == 179 and
-        zoneID == xi.zone.DYNAMIS_XARCABARD and
+        zoneID == xi.zone.DYNAMIS_XARCABARD)) and
         target
     then
         xPos = target:getXPos() + math.random() * 6 - 3
@@ -864,7 +870,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         ["Moltenox Stubthumbs"] = { "M.Stubthunmbs", 136, 134, 176, 0, 5013, "Beastmen" }, -- Molt (WAR)
         ["Morblox Chubbychin"] = { "M.Chubbychin", 153, 134, 176, 0, 5013, "Beastmen" }, -- Morb (SMN)
         ["Routsix Rubbertendon"] = { "R.Rubbertendon", 151, 134, 176, 0, 5013, "Beastmen" }, -- Rout (BST)
-        ["Ruffbix Jumbolobes"] = { "R.Jumolobes", 148, 134, 176, 4, 5013, "Beastmen" }, -- Ruff (PLD)
+        ["Ruffbix Jumbolobes"] = { "R.Jumbolobes", 148, 134, 176, 4, 5013, "Beastmen" }, -- Ruff (PLD)
         ["Shisox Widebrow"] = { "S.Widebrow", 156, 134, 176, 0, 5013, "Beastmen" }, -- Shis (SAM)
         ["Slinkix Trufflesniff"] = { "S.Trufflesniff", 155, 134, 176, 0, 5013, "Beastmen" }, -- Slin (RNG)
         ["Swypestix Tigershins"] = { "S.Tigershins", 145, 134, 176, 7, 5013, "Beastmen" }, -- Swyp (NIN)
@@ -1108,11 +1114,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         ["Nightmare Antlion"] = { "N. Antlion" , 64, 42, 0, 0, 4074, "Nightmare Antlion" }, -- NAnt
         ["Nightmare Worm"] = { "N. Worm" , 7, 42, 1807, 5075, 4081, "Nightmare Worm" }, -- NWor
         ["Umbral Diabolos"] = { "U. Diabolos", 4, 42, 0, nil, nil, "Umbral Diabolos" }, -- Umb
-        ["Diabolos Club"] = { "D. Club", 4, 42, 0, nil, nil, "Diabolos Club" }, -- DiaC
-        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, nil, nil, "Diabolos Diamond" }, -- DiaD
-        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, nil, nil, "Diabolos Heart" }, -- DiaH
-        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, nil, "Diabolos Spade" }, -- DiaS
-        ["Diabolos Shard"] = { "D. Shard", 5, 42, 0, nil, nil, "Enabled Auto Attack" }, -- DiaSh
+        ["Diabolos Club"] = { "D. Club", 4, 42, 0, 108, 4084, "Diabolos Club" }, -- DiaC
+        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, 107, 4082, "Diabolos Diamond" }, -- DiaD
+        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, 106, 4086, "Diabolos Heart" }, -- DiaH
+        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, 4085, "Diabolos Spade" }, -- DiaS
+        ["Diabolos Shard"] = { "D. Shard", 5, 42, 0, nil, 4087, "Diabolos Shard" }, -- DiaSh
     }
     xi.dynamis.nmFunctions =
     {
@@ -1280,6 +1286,10 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         },
         ["Goublefaupe"] =
         {
+            ["onMobInitialize"] = { function(mob)
+                mob:setMobMod(xi.mobMod.MP_BASE, 100)
+            end },
+
             ["onMobSpawn"] = { function(mob)
                 xi.dynamis.onSpawnGouble(mob)
             end },
@@ -1340,6 +1350,10 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         },
         ["Quiebitiel"] =
         {
+            ["onMobInitialize"] = { function(mob)
+                mob:setMobMod(xi.mobMod.MP_BASE, 100)
+            end },
+
             ["onMobSpawn"] = { function(mob)
                 xi.dynamis.onSpawnQuieb(mob)
             end },
@@ -1370,6 +1384,10 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         },
         ["Velosareon"] =
         {
+            ["onMobInitialize"] = { function(mob)
+                mob:setMobMod(xi.mobMod.MP_BASE, 100)
+            end },
+
             ["onMobSpawn"] = { function(mob)
                 xi.dynamis.onSpawnVelosar(mob)
             end },
@@ -1564,10 +1582,10 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onEngageMorbol(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
-                xi.dynamis.onFightMorbol(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
@@ -1753,7 +1771,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
 
             ["mixins"] = {   },
         },
-        ["Buburimu Dwagon"] =
+        ["Buburimu Dragon"] =
         {
             ["onMobSpawn"] = { function(mob)
                 xi.dynamis.onSpawnNoAuto(mob)
@@ -1763,11 +1781,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
-                xi.dynamis.onFightDwagon(mob, mobTarget)
+                xi.dynamis.onFightDragon(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
-                xi.dynamis.onRoamDwagon(mob)
+                xi.dynamis.onRoamDragon(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
@@ -1850,6 +1868,24 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobSpawn"] = { function(mob)
                 xi.dynamis.setNMStats(mob)
                 mob:addImmunity(xi.immunity.SLEEP)
+            end },
+
+            ["onMobEngaged"] = { function(mob, mobTarget)
+            end },
+
+            ["onMobFight"] = { function(mob, mobTarget)
+            end },
+
+            ["onMobRoam"] = { function(mob)
+            end },
+
+            ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
+            end },
+
+            ["onMobWeaponSkillPrepare"] = { function(mob)
+            end },
+
+            ["onMobWeaponSkill"] = { function(mob)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
@@ -1941,7 +1977,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
@@ -1957,13 +1993,15 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
-                xi.dynamis.onMobEngagedDiabolosClub(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosClub(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
@@ -1972,11 +2010,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosClub(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1988,58 +2026,67 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosHeart(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
+                xi.dynamis.onMobMagicPrepareDiabolosHeart(mob, mobTarget, spellId)
             end },
 
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosHeart(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
         },
         ["Diabolos Spade"] =
         {
-            ["onMobSpawn"] = { function(mob) xi.dynamis.onSpawnDiabolosSpade(mob)
+            ["onMobSpawn"] = { function(mob)
+                xi.dynamis.onSpawnDiabolosSpade(mob)
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosSpade(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
             end },
 
-            ["onMobWeaponSkillPrepare"] = { function(mob)
+            ["onMobWeaponSkillPrepare"] = { function(mob, mobTarget)
+                xi.dynamis.onMobWeaponSkillPrepareDiabolosSpade(mob, mobTarget)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams) xi.dynamis.mobOnDeathDiabolosSpade(mob, player, optParams)
+            ["onMobDeath"] = { function(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
         },
-
         ["Diabolos Diamond"] =
         {
             ["onMobSpawn"] = { function(mob)
@@ -2047,9 +2094,44 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosDiamond(mob, mobTarget)
+            end },
+
+            ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
+            end },
+
+            ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
+            end },
+
+            ["onMobWeaponSkillPrepare"] = { function(mob)
+            end },
+
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
+                xi.dynamis.onMobWeaponSkillDiabolosDiamond(mobTarget, mob, skill)
+            end },
+
+            ["onMobDeath"] = { function(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
+            end },
+
+            ["mixins"] = {   },
+        },
+        ["Diabolos Shard"] =
+        {
+            ["onMobSpawn"] = { function(mob)
+                xi.dynamis.onSpawnDiabolosShard(mob)
+            end },
+
+            ["onMobEngaged"] = { function(mob, mobTarget)
+            end },
+
+            ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosShard(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
@@ -2061,11 +2143,12 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
+                xi.dynamis.onMobWeaponSkillDiabolosShard(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosDiamond(mob, player, optParams)
+                xi.dynamis.mobOnDeath(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -2085,6 +2168,15 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         rotation = rPos,
         groupId = xi.dynamis.nmInfoLookup[mobName][2],
         groupZoneId = xi.dynamis.nmInfoLookup[mobName][3],
+        -- certain NMs need onMobInitialize functions to set mob mods (as dynamic mobs do not get pool mob mods)
+        onMobInitialize = function(mob)
+            local specFuncTable = xi.dynamis.nmFunctions[xi.dynamis.nmInfoLookup[mobName][7]]["onMobInitialize"]
+            if specFuncTable ~= nil then
+                local specFunc = specFuncTable[1]
+                specFunc(mob)
+            end
+        end,
+
         onMobSpawn = function(mob)
             local specFunc = xi.dynamis.nmFunctions[xi.dynamis.nmInfoLookup[mobName][7]]["onMobSpawn"][1]
             specFunc(mob)
@@ -2258,7 +2350,7 @@ xi.dynamis.spawnDynamicPet = function(target, oMob, mobJob)
                     ["Blazox Boneybod"] = { "V. Slime", 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
                     ["Routsix Rubbertendon"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
                     ["Blazax Boneybad"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Woodnix Shrillwistle"] = { "W. Slime" , 7, 40, 0, 54, 229 }, -- NM Goblin BST (WSSlime)
+                    ["Woodnix Shrillwhistle"] = { "W. Slime" , 7, 40, 0, 54, 229 }, -- NM Goblin BST (WSSlime)
                 },
             },
         },
@@ -2641,7 +2733,7 @@ xi.dynamis.setMobStats = function(mob)
 
         mob:setTrueDetection(true)
 
-        if     mob:getFamily() == 359 then -- If Hydra
+        if mob:getFamily() == 359 then -- If Hydra
             mob:setMobLevel(math.random(80, 82))
         elseif mob:getFamily() == 358 then -- If Kindred
             mob:setMobLevel(math.random(77, 80))
@@ -2649,7 +2741,7 @@ xi.dynamis.setMobStats = function(mob)
             mob:setMobLevel(math.random(77, 78))
         end
 
-        if     job == xi.job.WAR then
+        if job == xi.job.WAR then
             local params = {  }
             params.specials = {  }
             params.specials.skill = {  }
@@ -2991,6 +3083,7 @@ m:addOverride("xi.dynamis.megaBossOnDeath", function(mob, player)
     local zoneID = mob:getZoneID()
     local mobIndex = mob:getZone():getLocalVar(string.format("MobIndex_%s", mob:getID()))
     local mobVar = xi.dynamis.mobList[mob:getZoneID()][mobIndex].info[5]
+
     if mob:getLocalVar("GaveTimeExtension") ~= 1 then -- Ensure we don't give more than 1 time extension.
         xi.dynamis.mobOnDeath(mob, player, mobVar) -- Process time extension and wave spawning
         local winQM = GetNPCByID(xi.dynamis.dynaInfoEra[zoneID].winQM) -- Set winQM

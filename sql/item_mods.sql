@@ -2873,6 +2873,7 @@ INSERT INTO `item_mods` VALUES (10714,9,8);    -- DEX: 8
 INSERT INTO `item_mods` VALUES (10714,12,8);   -- INT: 8
 INSERT INTO `item_mods` VALUES (10714,115,15); -- ELEM: 15
 INSERT INTO `item_mods` VALUES (10714,500,5);  -- ITEM_ADDEFFECT_DMG: 5
+INSERT INTO `item_mods` VALUES (10714,1079,30); -- Enhances effect of "Spikes" spells
 
 -- Assassins Culottes +2
 INSERT INTO `item_mods` VALUES (10715,1,44);  -- DEF: 44
@@ -17655,8 +17656,8 @@ INSERT INTO `item_mods` VALUES (13691,10,4); -- VIT: 4
 
 -- Skulkers Cape
 INSERT INTO `item_mods` VALUES (13692,1,4);    -- DEF: 4
-INSERT INTO `item_mods` VALUES (13692,946,30); -- SNEAK_DURATION: 30
-INSERT INTO `item_mods` VALUES (13692,947,30); -- INVISIBLE_DURATION: 30
+INSERT INTO `item_mods` VALUES (13692,2002,50); -- INVISIBLE_EQUIP_BOOST: 50%
+INSERT INTO `item_mods` VALUES (13692,2003,50); -- SNEAK_EQUIP_BOOST: 50%
 
 -- Aries Mantle
 INSERT INTO `item_mods` VALUES (13693,1,6); -- DEF: 6
@@ -24424,7 +24425,7 @@ INSERT INTO `item_mods` VALUES (14930,505,5); -- OVERLOAD_THRESH: 5
 
 -- Carbuncles Cuffs
 INSERT INTO `item_mods` VALUES (14931,1,14);   -- DEF: 14
-INSERT INTO `item_mods` VALUES (14931,1179,1); -- Summoning magic casting time -1
+INSERT INTO `item_mods` VALUES (14931,1078,1); -- Summoning magic casting time -1
 
 -- Sipahi Dastana
 INSERT INTO `item_mods` VALUES (14932,1,13); -- DEF: 13
@@ -25568,6 +25569,7 @@ INSERT INTO `item_mods` VALUES (15121,1,33);   -- DEF: 33
 INSERT INTO `item_mods` VALUES (15121,5,16);   -- MP: 16
 INSERT INTO `item_mods` VALUES (15121,9,5);    -- DEX: 5
 INSERT INTO `item_mods` VALUES (15121,115,10); -- ELEM: 10
+INSERT INTO `item_mods` VALUES (15121,1079,20); -- Enhances effect of "Spikes" spells
 
 -- Assassins Culottes
 INSERT INTO `item_mods` VALUES (15122,1,34);  -- DEF: 34
@@ -27870,6 +27872,7 @@ INSERT INTO `item_mods` VALUES (15584,1,34);   -- DEF: 34
 INSERT INTO `item_mods` VALUES (15584,5,16);   -- MP: 16
 INSERT INTO `item_mods` VALUES (15584,9,6);    -- DEX: 6
 INSERT INTO `item_mods` VALUES (15584,115,12); -- ELEM: 12
+INSERT INTO `item_mods` VALUES (15584,1079,20); -- Enhances effect of "Spikes" spells
 
 -- Assassins Culottes +1
 INSERT INTO `item_mods` VALUES (15585,1,35);  -- DEF: 35
@@ -32599,7 +32602,7 @@ INSERT INTO `item_mods` VALUES (16788,25,5); -- ACC: 5
 -- Death Scythe +1
 INSERT INTO `item_mods` VALUES (16791,431,5);  -- ITEM_ADDEFFECT_TYPE: 5
 INSERT INTO `item_mods` VALUES (16791,499,21); -- ITEM_SUBEFFECT: 21
-INSERT INTO `item_mods` VALUES (16791,500,10); -- ITEM_ADDEFFECT_DMG: 10
+INSERT INTO `item_mods` VALUES (16791,500,60); -- ITEM_ADDEFFECT_DMG: 60
 INSERT INTO `item_mods` VALUES (16791,501,10); -- ITEM_ADDEFFECT_CHANCE: 10
 INSERT INTO `item_mods` VALUES (16791,950,8);  -- ITEM_ADDEFFECT_ELEMENT: 8
 
@@ -34328,6 +34331,9 @@ INSERT INTO `item_mods` VALUES (17449,23,5); -- ATT: 5
 -- Healing Mace
 INSERT INTO `item_mods` VALUES (17450,112,7); -- HEALING: 7
 
+-- Morgenstern
+INSERT INTO `item_mods` VALUES (17451,377,13); -- MAIN_DMG_RANK: 13
+
 -- Bastokan Hammer
 INSERT INTO `item_mods` VALUES (17452,25,2); -- ACC: 2
 
@@ -35111,6 +35117,9 @@ INSERT INTO `item_mods` VALUES (17587,5,1); -- MP: 1
 INSERT INTO `item_mods` VALUES (17588,2,5); -- HP: 5
 INSERT INTO `item_mods` VALUES (17588,5,5); -- MP: 5
 
+-- Thyrsusstab
+INSERT INTO `item_mods` VALUES (17589,377,13); -- MAIN_DMG_RANK: 13
+
 -- Primate Staff
 INSERT INTO `item_mods` VALUES (17590,165,5); -- CRITHITRATE: 5
 
@@ -35596,7 +35605,7 @@ INSERT INTO `item_mods` VALUES (17711,12,4);    -- INT: 4
 INSERT INTO `item_mods` VALUES (17711,25,8);    -- ACC: 8
 INSERT INTO `item_mods` VALUES (17711,109,-5);  -- SHIELD: -5
 INSERT INTO `item_mods` VALUES (17711,431,15);  -- ITEM_ADDEFFECT_TYPE: 15 (Avatar Summoned)
-INSERT INTO `item_mods` VALUES (17711,1178,14); -- ITEM_ADDEFFECT_OPTION: 14 (Shiva's ID)
+INSERT INTO `item_mods` VALUES (17711,1180,14); -- ITEM_ADDEFFECT_OPTION: 14 (Shiva's ID)
 INSERT INTO `item_mods` VALUES (17711,499,2);   -- ITEM_SUBEFFECT: 2 (Enblizzard)
 INSERT INTO `item_mods` VALUES (17711,500,50);  -- ITEM_ADDEFFECT_DMG: 50
 INSERT INTO `item_mods` VALUES (17711,501,50);  -- ITEM_ADDEFFECT_CHANCE: 50% (Need verification)
@@ -35982,6 +35991,9 @@ INSERT INTO `item_mods` VALUES (17824,8,2); -- STR: 2
 
 -- Messhikimaru
 INSERT INTO `item_mods` VALUES (17826,14,2); -- CHR: 2
+
+-- Michishiba
+INSERT INTO `item_mods` VALUES (17827,377,13); -- MAIN_DMG_RANK: 13
 
 -- Koen
 INSERT INTO `item_mods` VALUES (17828,431,1);  -- ITEM_ADDEFFECT_TYPE: 1
@@ -36532,6 +36544,9 @@ INSERT INTO `item_mods` VALUES (18048,14,5); -- CHR: 5
 -- Mighty Zaghnal
 INSERT INTO `item_mods` VALUES (18049,12,2); -- INT: 2
 
+-- Gravedigger
+INSERT INTO `item_mods` VALUES (18053,377,13); -- MAIN_DMG_RANK: 13
+
 -- Ivory Sickle
 INSERT INTO `item_mods` VALUES (18054,7,10); -- CONVHPTOMP: 10
 INSERT INTO `item_mods` VALUES (18054,12,1); -- INT: 1
@@ -36665,7 +36680,7 @@ INSERT INTO `item_mods` VALUES (18107,26,2); -- RACC: 2
 INSERT INTO `item_mods` VALUES (18109,13,8);    -- MND: 8
 INSERT INTO `item_mods` VALUES (18109,23,8);    -- ATT: 8
 INSERT INTO `item_mods` VALUES (18109,431,15);  -- ITEM_ADDEFFECT_TYPE: 15 (Avatar Summoned)
-INSERT INTO `item_mods` VALUES (18109,1178,12); -- ITEM_ADDEFFECT_OPTION: 12 (Leviathan's ID)
+INSERT INTO `item_mods` VALUES (18109,1180,12); -- ITEM_ADDEFFECT_OPTION: 12 (Leviathan's ID)
 INSERT INTO `item_mods` VALUES (18109,499,6);   -- ITEM_SUBEFFECT: 6 (Water Damage)
 INSERT INTO `item_mods` VALUES (18109,500,50);  -- ITEM_ADDEFFECT_DMG: 50
 INSERT INTO `item_mods` VALUES (18109,501,50);  -- ITEM_ADDEFFECT_CHANCE: 50% (Need verification)
@@ -37099,6 +37114,9 @@ INSERT INTO `item_mods` VALUES (18212,11,1); -- AGI: 1
 -- Mighty Axe
 INSERT INTO `item_mods` VALUES (18213,10,1); -- VIT: 1
 INSERT INTO `item_mods` VALUES (18213,11,1); -- AGI: 1
+
+-- Rampager
+INSERT INTO `item_mods` VALUES (18217,377,13); -- MAIN_DMG_RANK: 13
 
 -- Prominence Axe
 INSERT INTO `item_mods` VALUES (18220,431,1);  -- ITEM_ADDEFFECT_TYPE: 1
@@ -37685,7 +37703,7 @@ INSERT INTO `item_mods` VALUES (18403,13,4); -- MND: 4
 INSERT INTO `item_mods` VALUES (18404,9,5);     -- DEX: 5
 INSERT INTO `item_mods` VALUES (18404,23,5);    -- ATT: 5
 INSERT INTO `item_mods` VALUES (18404,431,15);  -- ITEM_ADDEFFECT_TYPE: 15 (Avatar Summoned)
-INSERT INTO `item_mods` VALUES (18404,1178,15); -- ITEM_ADDEFFECT_OPTION: 15 (Ramuh's ID)
+INSERT INTO `item_mods` VALUES (18404,1180,15); -- ITEM_ADDEFFECT_OPTION: 15 (Ramuh's ID)
 INSERT INTO `item_mods` VALUES (18404,499,5);   -- ITEM_SUBEFFECT: 5 (Lightning Damage)
 INSERT INTO `item_mods` VALUES (18404,500,50);  -- ITEM_ADDEFFECT_DMG: 50
 INSERT INTO `item_mods` VALUES (18404,501,50);  -- ITEM_ADDEFFECT_CHANCE: 50
@@ -38235,7 +38253,7 @@ INSERT INTO `item_mods` VALUES (18580,452,3); -- ALL_SONGS_EFFECT: 3
 INSERT INTO `item_mods` VALUES (18581,14,4);     -- CHR: 4
 INSERT INTO `item_mods` VALUES (18581,345,1000); -- TP_BONUS: 1000
 INSERT INTO `item_mods` VALUES (18581,431,15);   -- ITEM_ADDEFFECT_TYPE: 15 (Avatar Summoned)
-INSERT INTO `item_mods` VALUES (18581,1178,8);   -- ITEM_ADDEFFECT_OPTION: 8 (Carbuncle's ID)
+INSERT INTO `item_mods` VALUES (18581,1180,8);   -- ITEM_ADDEFFECT_OPTION: 8 (Carbuncle's ID)
 INSERT INTO `item_mods` VALUES (18581,499,7);    -- ITEM_SUBEFFECT: 7 (Light damage)
 INSERT INTO `item_mods` VALUES (18581,500,75);   -- ITEM_ADDEFFECT_DMG: 75
 INSERT INTO `item_mods` VALUES (18581,501,50);   -- ITEM_ADDEFFECT_CHANCE: 50%

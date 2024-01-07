@@ -1729,9 +1729,9 @@ REPLACE INTO `mob_droplist` VALUES (2546,1,1,@UNCOMMON,15146,67);  -- SMN Feet
 -- REPLACE INTO `mob_droplist` VALUES (2546,1,2,@UNCOMMON,15031,334); -- PUP Hands (Comment in for ToAU)
 -- REPLACE INTO `mob_droplist` VALUES (2546,1,3,@UNCOMMON,16352,500); -- DNC Feet  (Comment in for WoTG)
 -- REPLACE INTO `mob_droplist` VALUES (2546,1,3,@UNCOMMON,16362,500); -- SCH Legs  (Comment in for WoTG)
-REPLACE INTO `mob_droplist` VALUES (2546,0,0,1000,1449,@COMMON); -- Bronzepiece
-REPLACE INTO `mob_droplist` VALUES (2546,0,0,1000,1449,@UNCOMMON); -- Bronzepiece
-REPLACE INTO `mob_droplist` VALUES (2546,2,0,1000,1449,0); -- Bronzepiece
+REPLACE INTO `mob_droplist` VALUES (2546,0,0,1000,1452,@COMMON); -- Bronzepiece
+REPLACE INTO `mob_droplist` VALUES (2546,0,0,1000,1452,@UNCOMMON); -- Bronzepiece
+REPLACE INTO `mob_droplist` VALUES (2546,2,0,1000,1452,0); -- Bronzepiece
 DELETE FROM `mob_droplist` WHERE dropid = "2556"; -- Quadav
 REPLACE INTO `mob_droplist` VALUES (2556,1,1,@UNCOMMON,15072,66);  -- WAR Head
 REPLACE INTO `mob_droplist` VALUES (2556,1,1,@UNCOMMON,15103,66);  -- MNK Hands
@@ -2513,15 +2513,15 @@ REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `
 --                            Fix Mob MP                            --
 -- --------------------------------------------------------------------
 DELETE FROM mob_groups WHERE name = "Goublefaupe";
-REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (6,1774,134,'Goublefaupe',0,128,2574,5000,0,81,83,0);
+REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (6,1774,134,'Goublefaupe',0,128,2574,17000,17000,81,83,0);
 DELETE FROM mob_groups WHERE name = "Quiebitiel";
-REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (7,3289,134,'Quiebitiel',0,128,2066,5000,0,81,83,0);
+REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (7,3289,134,'Quiebitiel',0,128,2066,17000,17000,81,83,0);
 DELETE FROM mob_groups WHERE name = "Mildaunegeux";
-REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (8,2660,134,'Mildaunegeux',0,128,2574,5000,0,81,83,0);
+REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (8,2660,134,'Mildaunegeux',0,128,2574,17000,0,81,83,0);
 DELETE FROM mob_groups WHERE name = "Velosareon";
-REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (9,4219,134,'Velosareon',0,128,2574,5000,0,81,83,0);
+REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (9,4219,134,'Velosareon',0,128,2574,17000,17000,81,83,0);
 DELETE FROM mob_groups WHERE name = "Dagourmarche";
-REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (10,892,134,'Dagourmarche',0,128,2066,5000,0,81,83,0);
+REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (10,892,134,'Dagourmarche',0,128,2066,17000,0,81,83,0);
 DELETE FROM mob_groups WHERE name = "Apocalyptic_Beast";
 REPLACE INTO mob_groups (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (1,198,40,'Apocalyptic_Beast',0,128,146,27000,27000,85,85,0);
 -- --------------------------------------------------------------------
